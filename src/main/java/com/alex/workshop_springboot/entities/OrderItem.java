@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import com.alex.workshop_springboot.entities.pk.OrderItemPk;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -15,7 +16,7 @@ public class OrderItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private OrderItemPk id;
+	private OrderItemPk id = new OrderItemPk();
 
 	private Integer quantity;
 	private Double price;
@@ -23,28 +24,33 @@ public class OrderItem implements Serializable {
 	public OrderItem() {
 	}
 
-	public OrderItem(Order order, Product product, Integer quantity, Double price) { //editado
+	public OrderItem(Order order, Product product, Integer quantity, Double price) { // editado
 		super();
 		id.setOrder(order);
 		id.setProduct(product);
 		this.quantity = quantity;
 		this.price = price;
 	}
-	
-	//Manual\\
+
+	// Feito de forma Manual na aula\\
+
+	@JsonIgnore // para evitar serialização no get de orders
 	public Order getOrder() {
 		return id.getOrder();
 	}
+
 	public void setOrder(Order order) {
 		id.setOrder(order);
 	}
+
 	public Product getProduct() {
 		return id.getProduct();
 	}
+
 	public void setProduct(Product product) {
 		id.setProduct(product);
 	}
-	//Termninou\\
+	// fim\\
 
 	public Integer getQuantity() {
 		return quantity;
@@ -61,7 +67,7 @@ public class OrderItem implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
