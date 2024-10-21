@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.hibernate.sql.ast.tree.from.MappedByTableGroup;
-
 import com.alex.workshop_springboot.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -40,8 +38,8 @@ public class Order implements Serializable {
 
 	@OneToMany(mappedBy = "id.order")
 	private Set<OrderItem> items = new HashSet<>();
-	
-	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL) //isso faz com o q o pagamento tem o mesmo id do produto
+
+	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL) // isso faz com o q o pagamento tem o mesmo id do produto
 	private Payment payment;
 
 	public Order() {
@@ -100,6 +98,14 @@ public class Order implements Serializable {
 
 	public Set<OrderItem> getItems() {
 		return items;
+	}
+
+	public Double getTotal() {
+		Double soma = 0.0;
+		for (OrderItem orderItem : items) {
+			soma += orderItem.getSubTotal();
+		}
+		return soma;
 	}
 
 	@Override
